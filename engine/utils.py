@@ -76,7 +76,7 @@ def get_current_version(certificate_authority_file=None, client_certificate_file
         return version.replace('v', "")
     else:
         if certificate_authority_file is None and client_certificate_file is None and client_key_file is None:
-            response = requests.get(host + '/version', verify=False)
+            response = requests.get(host + '/version', verify=True)
             if response.status_code != 200:
                 print(response.text)
                 return None
