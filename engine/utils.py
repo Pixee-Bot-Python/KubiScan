@@ -76,7 +76,7 @@ def get_current_version(certificate_authority_file=None, client_certificate_file
         return version.replace('v', "")
     else:
         if certificate_authority_file is None and client_certificate_file is None and client_key_file is None:
-            response = requests.get(host + '/version', verify=False)
+            response = requests.get(host + '/version', verify=False, timeout=60)
             if response.status_code != 200:
                 print(response.text)
                 return None
@@ -84,7 +84,7 @@ def get_current_version(certificate_authority_file=None, client_certificate_file
                 return response.json()["gitVersion"].replace('v', "")
         if certificate_authority_file is not None and client_certificate_file is not None and client_key_file is not None:
             response = requests.get(host + '/version', cert=(client_certificate_file, client_key_file),
-                                    verify=certificate_authority_file)
+                                    verify=certificate_authority_file, timeout=60)
             if response.status_code != 200:
                 print(response.text)
                 return None
@@ -95,7 +95,7 @@ def get_current_version(certificate_authority_file=None, client_certificate_file
                   " client key file path and host address")
             return None
         response = requests.get(host + '/version', cert=(client_certificate_file, client_key_file),
-                                verify=certificate_authority_file)
+                                verify=certificate_authority_file, timeout=60)
         if response.status_code != 200:
             print(response.text)
             return None
