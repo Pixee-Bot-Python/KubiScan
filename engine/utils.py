@@ -1,4 +1,3 @@
-import requests
 
 from engine.role import Role
 from engine.priority import Priority
@@ -13,6 +12,8 @@ from engine.subject import Subject
 from misc.constants import *
 from kubernetes.client.rest import ApiException
 import urllib3
+from security import safe_requests
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
@@ -76,14 +77,14 @@ def get_current_version(certificate_authority_file=None, client_certificate_file
         return version.replace('v', "")
     else:
         if certificate_authority_file is None and client_certificate_file is None and client_key_file is None:
-            response = requests.get(host + '/version', verify=False)
+            response = safe_requests.get(host + '/version', verify=False)
             if response.status_code != 200:
                 print(response.text)
                 return None
             else:
                 return response.json()["gitVersion"].replace('v', "")
         if certificate_authority_file is not None and client_certificate_file is not None and client_key_file is not None:
-            response = requests.get(host + '/version', cert=(client_certificate_file, client_key_file),
+            response = safe_requests.get(host + '/version', cert=(client_certificate_file, client_key_file),
                                     verify=certificate_authority_file)
             if response.status_code != 200:
                 print(response.text)
@@ -94,7 +95,7 @@ def get_current_version(certificate_authority_file=None, client_certificate_file
             print("Please provide certificate authority file path, client certificate file path,"
                   " client key file path and host address")
             return None
-        response = requests.get(host + '/version', cert=(client_certificate_file, client_key_file),
+        response = safe_requests.get(host + '/version', cert=(client_certificate_file, client_key_file),
                                 verify=certificate_authority_file)
         if response.status_code != 200:
             print(response.text)
